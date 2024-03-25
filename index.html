@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Webshoppen</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="header clearfix">
+      <nav>
+        <ul class="nav nav-pills pull-right">
+          <li role="nav-item"><a href="index.html" class="nav-link active">Webshoppen</a></li>
+          <li role="nav-item"><a href="om-oss.html" class="nav-link">Om oss</a></li>
+          <li role="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-9">
+          <h1 class="mt-4 mb-4">Webshoppen</h1>
+        </div>
+        <div class="col">
+          <div id="cart" class="container">
+            <h2>Varukorg</h2>
+            <div id="cart-items">
+              <!-- Här läggs produkterna till dynamiskt -->
+            </div>
+            <div id="cart-total">
+              <p>Totalt: <span id="total-price">$0.00</span></p>
+            </div>
+            <button id="clear-cart-btn" class="btn btn-danger">Ta bort alla produkter</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--<div id ="order" class = "mt-4 mb-4 btn btn-primary">Beställ</div>-->
+    <div id="products" class="row"></div>
+    <footer class="footer">
+      <p>&copy; 2024 Webshoppen, Inc.</p>
+    </footer>
+  </div>
+
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/script.js"></script>
+</body>
+
+</html>
