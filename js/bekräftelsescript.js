@@ -3,15 +3,18 @@ let customer = JSON.parse(localStorage.getItem('customer'));
 
 if (cart) {
     const resultatDiv = document.getElementById('resultat2');
+    let totalPrice = 0;
 resultatDiv.innerHTML =  `<h2>Orderbekräftelse<h2><hr>
-                            <h3>Tack för din beställning:</h3><br>
+                            <h3>Tack för din beställning!</h3><br>
     `;
-
+    
     cart.forEach(product => {
+        totalPrice += product.price * product.quantity;
         resultatDiv.innerHTML += `<div>
         <img src="${product.image}" style="width: 60px; height: 60px;" alt="${product.title}" class="img-egen">
         <p><strong>Titel:</strong> ${product.title}</p>
         <p><strong>Pris:</strong> $${product.price}</p>
+        <p><strong>Antal:</strong> ${product.quantity}</p>
         <p><strong>Beskrivning:</strong> ${product.description}</p>
         <hr>
         </div>
@@ -19,6 +22,7 @@ resultatDiv.innerHTML =  `<h2>Orderbekräftelse<h2><hr>
 });
 
         resultatDiv.innerHTML += `
+        <h2>Totalt pris: $${totalPrice}<h2>
         <h3>Leveransuppgifter:</h3>
         <p><strong>Namn:</strong> ${customer.userName}</p>
         <p><strong>Email:</strong> ${customer.email}</p>

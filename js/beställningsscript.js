@@ -8,8 +8,7 @@ const city = document.getElementById('ort')
 
 form.addEventListener('submit', e => {
     e.preventDefault()
-
-    if(validInputs()){
+    if(validInputs() ){
         let customer = {userName: userName.value, email: email.value, tel: tel.value, adress: adress.value, postnr: postnr.value, city: city.value};
         localStorage.setItem('customer', JSON.stringify(customer));
         window.location.href = 'bekräftelsesida.html'
