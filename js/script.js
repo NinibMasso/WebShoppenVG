@@ -21,51 +21,88 @@ function displayProducts(products) {
             <img src="${product.image}" alt="${product.title}" class="img-fluid">
         </div>
         <div class="order-btn">
-            <button class = "btn btn-primary order-btn">Beställ</button>
+            <button class = "btn btn-primary order-btn">Lägg till varukorg</button>
         </div>
         `;
         productsContainer.appendChild(productElement);
-        // Hämta den skapade knappen för produkten
         const orderButton = productElement.querySelector('.order-btn');
-        // Lägg till eventlyssnare för knappen
         orderButton.addEventListener('click', () => {
-            // Lagra den valda produkten i localStorage
-            localStorage.setItem('selectedProduct', JSON.stringify(product));
-            // Navigera till beställningssidan
-            window.location.href = 'bestallningssida.html';
+            addToCart(product);
         });
     });
 }
 getProducts();
 
-
-
-
-
-
-
-/*
-document.getElementById('myForm').addEventListener('submit', orderProduct);
-
-function orderProduct(e){
-    // Get form values
-    let orderName = document.getElementById('name').value;
-    console.log(orderName);
-    let orderEmail = document.getElementById('email').value;
-    let orderNumber = document.getElementById('telefonnr').value;
-    let orderAddress = document.getElementById('address').value;
-    //let product = document.getElementsByClassName('product-content').value
-    console.log(product)
-    
-    var order = {
-        name: orderName,
-        email: orderEmail,
-        number: orderNumber,
-        address: orderAddress
+function addToCart(product) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let existingProductIndex = cart.findIndex(item => item.id === product.id);
+    if (existingProductIndex !== -1) {
+      cart[existingProductIndex].quantity++;
+    } else {
+      product.quantity = 1;
+      cart.push(product);
     }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCart();
+  }
+  
+  function removeFromCart(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCart();
+  }
 
-    console.log(order);
-    e.preventDefault();
-    
-}
-*/
+function increaseQuantity(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart[index].quantity++;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCart();
+  }
+  
+  function decreaseQuantity(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart[index].quantity > 1) {
+      cart[index].quantity--;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCart();
+    }
+  }
+  
+  function clearCart() {
+    localStorage.removeItem('cart');
+    updateCart();
+  }
+  
+  function updateCart() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let cartItemsContainer = document.getElementById('cart-items');
+    let totalPrice = 0;
+  
+    cartItemsContainer.innerHTML = '';
+  
+    cart.forEach((product, index) => {
+      totalPrice += product.price * product.quantity;
+      cartItemsContainer.innerHTML += `
+        <div class="cart-item">
+          <img src="${product.image}" width = "40px" alt="${product.title}" class="cart-item-image">
+          <div>
+            <p>${product.title} - $${product.price} x ${product.quantity}</p>
+            <div>
+              <button class="btn btn-secondary" onclick="increaseQuantity(${index})">+</button>
+              <button class="btn btn-secondary" onclick="decreaseQuantity(${index})">-</button>
+              <button class="btn btn-danger" onclick="removeFromCart(${index})">Ta bort</button>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  
+    document.getElementById('total-price').textContent = '$' + totalPrice.toFixed(2);
+    document.getElementById('checkout-btn').addEventListener('click', () => {
+        console.log(cart);
+        window.location.href = 'bestallningssida.html';
+      });
+  }
+  document.getElementById('clear-cart-btn').addEventListener('click', clearCart);
+  updateCart();

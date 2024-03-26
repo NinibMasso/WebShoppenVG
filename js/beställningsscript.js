@@ -1,18 +1,3 @@
-// Hämta den valda produkten från localStorage
-const selectedProduct = JSON.parse(localStorage.getItem('selectedProduct'));
-//console.log(selectedProduct);
-if (selectedProduct) {
-    // Visa den valda produkten på beställningssidan
-    const resultatDiv = document.getElementById('resultat');
-    resultatDiv.innerHTML = `
-        <h3>Du valde:</h3>
-        <p><strong>Titel:</strong> ${selectedProduct.title}</p>
-        <p><strong>Pris:</strong> $${selectedProduct.price}</p>
-        <p><strong>Beskrivning:</strong> ${selectedProduct.description}</p>
-        <img src="${selectedProduct.image}" alt="${selectedProduct.title}" class="img-egen">
-    `;
-}
-
 const form = document.getElementById('myForm')
 const userName = document.getElementById('name')
 const email = document.getElementById('email')
@@ -120,3 +105,98 @@ const validInputs = () => {
     }
     
 }
+
+function addToCart(product) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let existingProductIndex = cart.findIndex(item => item.id === product.id);
+    if (existingProductIndex !== -1) {
+      cart[existingProductIndex].quantity++;
+    } else {
+      product.quantity = 1;
+      cart.push(product);
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCart();
+  }
+  
+  function removeFromCart(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCart();
+  }
+
+function increaseQuantity(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart[index].quantity++;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCart();
+  }
+  
+  function decreaseQuantity(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart[index].quantity > 1) {
+      cart[index].quantity--;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCart();
+    }
+  }
+  
+  function clearCart() {
+    localStorage.removeItem('cart');
+    updateCart();
+  }
+  
+  function updateCart() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let totalPrice = 0;
+    let tableBody = document.getElementById('cart-table-body');
+  
+    tableBody.innerHTML = '';
+  
+    cart.forEach((product, index) => {
+      let row = tableBody.insertRow();
+      let productImageCell = row.insertCell(0);
+      let productNameCell = row.insertCell(1);
+      let pricePerItemCell = row.insertCell(2);
+      let quantityCell = row.insertCell(3);
+      let totalItemPriceCell = row.insertCell(4);
+      let actionCell = row.insertCell(5);
+
+      let productImage = document.createElement('img');
+      productImage.src = product.image;
+      productImage.width = '40';
+      productImage.alt = product.title;
+      productImageCell.appendChild(productImage);
+  
+      productNameCell.textContent = product.title;
+      pricePerItemCell.textContent = '$' + product.price.toFixed(2);
+      quantityCell.textContent = product.quantity;
+      let totalItemPrice = product.price * product.quantity;
+      totalItemPriceCell.textContent = '$' + totalItemPrice.toFixed(2);
+      totalPrice += totalItemPrice;
+  
+      let increaseBtn = document.createElement('button');
+      increaseBtn.textContent = '+';
+      increaseBtn.className = 'btn btn-secondary';
+      increaseBtn.onclick = function() { increaseQuantity(index); };
+      actionCell.appendChild(increaseBtn);
+  
+      let decreaseBtn = document.createElement('button');
+      decreaseBtn.textContent = '-';
+      decreaseBtn.className = 'btn btn-secondary';
+      decreaseBtn.onclick = function() { decreaseQuantity(index); };
+      actionCell.appendChild(decreaseBtn);
+  
+      let removeBtn = document.createElement('button');
+      removeBtn.textContent = 'Ta bort';
+      removeBtn.className = 'btn btn-danger';
+      removeBtn.onclick = function() { removeFromCart(index); };
+      actionCell.appendChild(removeBtn);
+    });
+  
+    document.getElementById('total-price').textContent = '$' + totalPrice.toFixed(2);
+  }
+  
+  document.getElementById('clear-cart-btn').addEventListener('click', clearCart);
+  updateCart();
